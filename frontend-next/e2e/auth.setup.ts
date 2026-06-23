@@ -4,7 +4,7 @@ const IDOSO_FILE = 'e2e/.auth/idoso.json'
 const STAFF_FILE = 'e2e/.auth/staff.json'
 
 setup('authenticate idoso', async ({ page, request }) => {
-  const email = `idoso_e2e_${Date.now()}@cidadeidoso.test`
+  const email = `idoso_e2e_${Date.now()}@mailinator.com`
   await request.post('/api/users', {
     data: { username: email.split('@')[0], email, password: 'senha123', first_name: 'Idoso' },
   })

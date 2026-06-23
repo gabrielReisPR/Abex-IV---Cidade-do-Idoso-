@@ -17,7 +17,7 @@ test('invalid login shows an alert', async ({ page }) => {
 })
 
 test('cadastro creates account and returns to login', async ({ page }) => {
-  const email = `e2e_${Date.now()}@cidadeidoso.test`
+  const email = `e2e_${Date.now()}@mailinator.com`
   await page.goto('/cadastro')
   await page.getByLabel(/nome de usuário/i).fill(`e2e_${Date.now()}`)
   await page.getByLabel(/e-mail/i).fill(email)
