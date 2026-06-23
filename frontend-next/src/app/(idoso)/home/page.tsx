@@ -23,20 +23,28 @@ export default async function HomePage() {
 
       <section data-testid="home-noticias">
         <h2 className="mb-3 text-2xl font-semibold">Últimas notícias</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {data.noticias.map((n) => (
-            <Card key={n.id} title={n.titulo} subtitle={n.descricao} imageUrl={n.imagem_url} />
-          ))}
-        </div>
+        {data.noticias.length === 0 ? (
+          <p className="text-slate-600">Nenhuma notícia no momento.</p>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {data.noticias.map((n) => (
+              <Card key={n.id} title={n.titulo} subtitle={n.descricao} imageUrl={n.imagem_url} />
+            ))}
+          </div>
+        )}
       </section>
 
       <section data-testid="home-cardapio">
         <h2 className="mb-3 text-2xl font-semibold">Cardápio</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {data.cardapio.map((c) => (
-            <Card key={c.id} title={c.titulo} subtitle={`${c.dia} • ${c.refeicao}`} />
-          ))}
-        </div>
+        {data.cardapio.length === 0 ? (
+          <p className="text-slate-600">Cardápio ainda não disponível.</p>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {data.cardapio.map((c) => (
+              <Card key={c.id} title={c.titulo} subtitle={`${c.dia} • ${c.refeicao}`} />
+            ))}
+          </div>
+        )}
       </section>
     </div>
   )
