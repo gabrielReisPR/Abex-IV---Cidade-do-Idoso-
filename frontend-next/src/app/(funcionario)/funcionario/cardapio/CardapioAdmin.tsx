@@ -7,7 +7,7 @@ import { criarItem, removerItem, type CardapioInput } from './actions'
 import type { CardapioItemOut } from '@/lib/types'
 
 export function CardapioAdmin({ itens }: { itens: CardapioItemOut[] }) {
-  const { register, handleSubmit, reset } = useForm<CardapioInput>({ resolver: zodResolver(cardapioFormSchema) })
+  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<CardapioInput>({ resolver: zodResolver(cardapioFormSchema) })
   const [msg, setMsg] = useState(''); const [err, setErr] = useState(''); const [pending, start] = useTransition()
 
   async function onSubmit(values: CardapioInput) {
@@ -29,7 +29,7 @@ export function CardapioAdmin({ itens }: { itens: CardapioItemOut[] }) {
         <div className="sm:col-span-2">
           {msg && <p role="status" className="mb-2 text-green-700">{msg}</p>}
           {err && <p role="alert" className="mb-2 text-red-700">{err}</p>}
-          <button type="submit" className="rounded-lg bg-brand px-6 py-3 font-bold text-white">Adicionar item</button>
+          <button type="submit" disabled={isSubmitting} className="rounded-lg bg-brand px-6 py-3 font-bold text-white">Adicionar item</button>
         </div>
       </form>
 

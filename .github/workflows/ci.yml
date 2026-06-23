@@ -38,6 +38,28 @@ jobs:
       - name: Testes (pytest + cobertura)
         run: poetry run pytest -q --cov=sistema_provas
 
+  frontend-checks:
+    name: Frontend — vitest + lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: frontend-next
+        run: npm ci
+
+      - name: Unit tests (vitest)
+        working-directory: frontend-next
+        run: npm run test:unit
+
+      - name: Lint (next lint)
+        working-directory: frontend-next
+        run: npm run lint
+
   e2e:
     name: E2E — Playwright (stack Docker)
     runs-on: ubuntu-latest

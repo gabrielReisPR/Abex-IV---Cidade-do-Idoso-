@@ -8,7 +8,7 @@ import { criarNoticia, removerNoticia, type NoticiaInput } from './actions'
 import type { NoticiaOut } from '@/lib/types'
 
 export function NoticiaAdmin({ noticias }: { noticias: NoticiaOut[] }) {
-  const { register, handleSubmit, reset } = useForm<NoticiaInput>({ resolver: zodResolver(noticiaFormSchema) })
+  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<NoticiaInput>({ resolver: zodResolver(noticiaFormSchema) })
   const [msg, setMsg] = useState(''); const [err, setErr] = useState(''); const [pending, start] = useTransition()
   const router = useRouter()
 
@@ -29,7 +29,7 @@ export function NoticiaAdmin({ noticias }: { noticias: NoticiaOut[] }) {
         <div className="sm:col-span-2">
           {msg && <p role="status" className="mb-2 text-green-700">{msg}</p>}
           {err && <p role="alert" className="mb-2 text-red-700">{err}</p>}
-          <button type="submit" className="rounded-lg bg-brand px-6 py-3 font-bold text-white">Publicar notícia</button>
+          <button type="submit" disabled={isSubmitting} className="rounded-lg bg-brand px-6 py-3 font-bold text-white">Publicar notícia</button>
         </div>
       </form>
 

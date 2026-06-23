@@ -7,7 +7,7 @@ import { criarAtividade, removerAtividade, type AtividadeInput } from './actions
 import type { AtividadeOut } from '@/lib/types'
 
 export function AtividadeAdmin({ atividades }: { atividades: AtividadeOut[] }) {
-  const { register, handleSubmit, reset } = useForm<AtividadeInput>({ resolver: zodResolver(atividadeFormSchema) })
+  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<AtividadeInput>({ resolver: zodResolver(atividadeFormSchema) })
   const [msg, setMsg] = useState(''); const [err, setErr] = useState(''); const [pending, start] = useTransition()
 
   async function onSubmit(values: AtividadeInput) {
@@ -27,7 +27,7 @@ export function AtividadeAdmin({ atividades }: { atividades: AtividadeOut[] }) {
         <div className="sm:col-span-2">
           {msg && <p role="status" className="mb-2 text-green-700">{msg}</p>}
           {err && <p role="alert" className="mb-2 text-red-700">{err}</p>}
-          <button type="submit" className="rounded-lg bg-brand px-6 py-3 font-bold text-white">Criar atividade</button>
+          <button type="submit" disabled={isSubmitting} className="rounded-lg bg-brand px-6 py-3 font-bold text-white">Criar atividade</button>
         </div>
       </form>
 

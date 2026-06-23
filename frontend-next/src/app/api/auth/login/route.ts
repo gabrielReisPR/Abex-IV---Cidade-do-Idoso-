@@ -10,8 +10,15 @@ const API = process.env.API_INTERNAL_URL ?? 'http://localhost:8000'
 const SECURE = process.env.COOKIE_SECURE === '1'
 
 export async function POST(req: NextRequest) {
-  const { email, password, mode } = (await req.json()) as {
-    email: string; password: string; mode: 'idoso' | 'funcionario'
+  let body: { email?: string; password?: string; mode?: 'idoso' | 'funcionario' }
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: 'Requisição inválida.' }, { status: 400 })
+  }
+  const { email, password, mode } = body
+  if (!email || !password) {
+    return NextResponse.json({ error: 'Requisição inválida.' }, { status: 400 })
   }
 
   const form = new URLSearchParams({ username: email, password })
