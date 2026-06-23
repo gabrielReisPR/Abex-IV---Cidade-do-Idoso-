@@ -25,14 +25,25 @@ function Inner() {
   return (
     <AuthCard title="Definir nova senha">
       {ok ? (
-        <p role="status" className="rounded bg-green-50 p-3 text-green-700">Senha redefinida! Redirecionando…</p>
+        <p role="status" className="feedback-success">Senha redefinida! Redirecionando…</p>
       ) : (
         <form onSubmit={onSubmit} className="space-y-4">
-          <label htmlFor="nova_senha" className="block font-medium">Nova senha</label>
-          <input id="nova_senha" name="nova_senha" type="password" required
-            className="w-full rounded-lg border border-slate-300 p-3 text-lg" />
-          {err && <p role="alert" className="rounded bg-red-50 p-3 text-red-700">{err}</p>}
-          <button type="submit" className="w-full rounded-lg bg-sky-600 px-4 py-3 text-lg font-bold text-white">
+          <div>
+            <label htmlFor="nova_senha" className="block text-base font-medium mb-1" style={{ color: 'var(--color-ink)' }}>
+              Nova senha
+            </label>
+            <input
+              id="nova_senha"
+              name="nova_senha"
+              type="password"
+              required
+              className="field-input"
+            />
+          </div>
+
+          {err && <p role="alert" className="feedback-error">{err}</p>}
+
+          <button type="submit" className="btn-primary w-full">
             Salvar nova senha
           </button>
         </form>
