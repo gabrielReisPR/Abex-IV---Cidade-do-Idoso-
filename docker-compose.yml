@@ -47,10 +47,12 @@ services:
 
   web:
     build:
-      context: ./frontend
+      context: ./frontend-next
       dockerfile: Dockerfile
     ports:
-      - "8080:80"
+      - "3000:3000"
+    environment:
+      API_INTERNAL_URL: http://api:8000
     depends_on:
       - api
 
