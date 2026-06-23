@@ -9,5 +9,8 @@ export default defineConfig({
   fullyParallel: false,
   reporter: 'list',
   use: { baseURL: BASE, trace: 'on-first-retry' },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    { name: 'setup', testMatch: /auth\.setup\.ts/ },
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] }, dependencies: ['setup'] },
+  ],
 })
