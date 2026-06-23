@@ -15,7 +15,7 @@ export default async function AtividadesPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Atividades</h1>
+      <h1 className="text-3xl font-bold" style={{ color: 'var(--color-ink)' }}>Atividades</h1>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {catalogo.atividades.map((a) => {
           const inscricaoId = enrolledByActivity.get(a.id) ?? null
@@ -24,9 +24,9 @@ export default async function AtividadesPage() {
             : `${a.inscritos ?? 0}/${a.vagas} inscritos`
           return (
             <div key={a.id} data-testid="atividade-card">
-              <Card title={a.titulo} subtitle={`${a.data} • ${a.hora}`} imageUrl={a.imagem_url}>
-                <p className="text-sm text-slate-500">{vagasTxt}</p>
-                <div className="mt-2">
+              <Card title={a.titulo} subtitle={`${a.data} • ${a.hora}`} imageUrl={a.imagem_url} icon="fa-calendar-check">
+                <p className="text-base" style={{ color: 'var(--color-muted)' }}>{vagasTxt}</p>
+                <div className="mt-3">
                   <EnrollButton activityId={a.id} inscricaoId={inscricaoId} full={full} />
                 </div>
               </Card>

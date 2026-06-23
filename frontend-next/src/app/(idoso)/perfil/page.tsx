@@ -12,8 +12,22 @@ export default async function PerfilPage() {
   }
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Meu perfil</h1>
-      <p className="text-slate-600">{me.username} • {me.email}</p>
+      <div
+        className="rounded-2xl p-6 text-white flex items-center gap-4"
+        style={{ background: 'linear-gradient(135deg, #01200F 0%, #00B931 100%)' }}
+      >
+        <div
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-xl"
+          style={{ background: 'linear-gradient(135deg, #00B931 0%, #01200F 100%)' }}
+          aria-hidden="true"
+        >
+          <i className="fas fa-user" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold">Meu perfil</h1>
+          <p className="mt-1 opacity-85 text-base">{me.username} • {me.email}</p>
+        </div>
+      </div>
       <PerfilForm initial={initial} />
     </div>
   )

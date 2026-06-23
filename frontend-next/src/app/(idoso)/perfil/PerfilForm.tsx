@@ -26,18 +26,32 @@ export function PerfilForm({ initial }: { initial: PerfilInput }) {
   ]
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 sm:grid-cols-2">
+    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-5 sm:grid-cols-2">
       {fields.map((f) => (
         <div key={f.name}>
-          <label htmlFor={f.name} className="block font-medium">{f.label}</label>
-          <input id={f.name} {...register(f.name)}
-            className="mt-1 w-full rounded-lg border border-slate-300 p-3 text-lg" />
+          <label
+            htmlFor={f.name}
+            className="mb-1 block font-semibold text-base"
+            style={{ color: 'var(--color-ink)' }}
+          >
+            {f.label}
+          </label>
+          <input
+            id={f.name}
+            {...register(f.name)}
+            className="field-input"
+          />
         </div>
       ))}
-      <div className="sm:col-span-2">
-        {msg && <p role="status" className="rounded bg-green-50 p-3 text-green-700">{msg}</p>}
-        {err && <p role="alert" className="rounded bg-red-50 p-3 text-red-700">{err}</p>}
-        <button type="submit" className="mt-2 rounded-lg bg-sky-600 px-6 py-3 text-lg font-bold text-white">
+      <div className="sm:col-span-2 space-y-3">
+        {msg && (
+          <p role="status" className="feedback-success">{msg}</p>
+        )}
+        {err && (
+          <p role="alert" className="feedback-error">{err}</p>
+        )}
+        <button type="submit" className="btn-primary">
+          <i className="fas fa-save" aria-hidden="true" />
           Salvar
         </button>
       </div>

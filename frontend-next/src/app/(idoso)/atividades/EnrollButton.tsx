@@ -18,15 +18,25 @@ export function EnrollButton({ activityId, inscricaoId, full }: {
   }
 
   if (full && !enrolled) {
-    return <span className="inline-block rounded bg-slate-200 px-4 py-2 font-semibold text-slate-600">Lotada</span>
+    return (
+      <span
+        className="inline-flex items-center rounded-lg px-4 py-3 font-semibold text-base"
+        style={{ background: 'var(--color-border)', color: 'var(--color-muted)', minHeight: '48px' }}
+      >
+        Lotada
+      </span>
+    )
   }
   return (
     <div>
-      <button onClick={onClick} disabled={pending}
-        className={`rounded-lg px-4 py-2 font-bold text-white disabled:opacity-60 ${enrolled ? 'bg-red-600' : 'bg-sky-600'}`}>
+      <button
+        onClick={onClick}
+        disabled={pending}
+        className={enrolled ? 'btn-danger' : 'btn-primary'}
+      >
         {pending ? '…' : enrolled ? 'Cancelar inscrição' : 'Inscrever-se'}
       </button>
-      {error && <p role="alert" className="mt-1 text-sm text-red-700">{error}</p>}
+      {error && <p role="alert" className="feedback-error mt-2 text-base">{error}</p>}
     </div>
   )
 }
