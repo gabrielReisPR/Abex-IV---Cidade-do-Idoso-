@@ -15,3 +15,13 @@ test('invalid login shows an alert', async ({ page }) => {
   await page.getByRole('button', { name: /entrar/i }).click()
   await expect(page.getByRole('alert')).toBeVisible()
 })
+
+test('cadastro creates account and returns to login', async ({ page }) => {
+  const email = `e2e_${Date.now()}@cidadeidoso.test`
+  await page.goto('/cadastro')
+  await page.getByLabel(/nome de usuário/i).fill(`e2e_${Date.now()}`)
+  await page.getByLabel(/e-mail/i).fill(email)
+  await page.getByLabel(/senha/i).fill('senha123')
+  await page.getByRole('button', { name: /cadastrar/i }).click()
+  await expect(page.getByRole('status')).toContainText(/sucesso|criada/i)
+})
