@@ -35,3 +35,13 @@ test('staff can create a menu item', async ({ page }) => {
   await page.getByRole('button', { name: /adicionar item/i }).click()
   await expect(page.getByText(titulo)).toBeVisible({ timeout: 7000 })
 })
+
+test('staff can create a news item', async ({ page }) => {
+  await page.goto('/funcionario/noticias')
+  const titulo = `Notícia ${Date.now()}`
+  await page.getByLabel(/título/i).fill(titulo)
+  await page.getByLabel(/descrição/i).fill('Texto da notícia de teste.')
+  await page.getByLabel(/fonte/i).fill('https://example.com')
+  await page.getByRole('button', { name: /publicar notícia/i }).click()
+  await expect(page.getByText(titulo)).toBeVisible({ timeout: 7000 })
+})
