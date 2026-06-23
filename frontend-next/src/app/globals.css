@@ -1,1 +1,30 @@
 @import "tailwindcss";
+
+@theme {
+  --color-brand: #0369a1;
+  --color-brand-strong: #075985;
+  --font-size-base: 1.125rem; /* larger default for readability */
+}
+
+/* Accessibility: font scaling via root font-size (rem cascade). */
+html { font-size: 100%; }
+html.a11y-zoom-1 { font-size: 112.5%; }
+html.a11y-zoom-2 { font-size: 125%; }
+
+/* High contrast theme. */
+html.high-contrast {
+  filter: contrast(1.15);
+}
+html.high-contrast body {
+  background: #000;
+  color: #fff;
+}
+html.high-contrast a { color: #ffd400; }
+
+/* Visible keyboard focus everywhere. */
+:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+body { font-size: var(--font-size-base); }
