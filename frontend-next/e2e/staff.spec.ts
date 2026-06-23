@@ -23,3 +23,15 @@ test('staff can create an activity', async ({ page }) => {
   await page.getByRole('button', { name: /criar atividade/i }).click()
   await expect(page.getByText(titulo)).toBeVisible({ timeout: 7000 })
 })
+
+test('staff can create a menu item', async ({ page }) => {
+  await page.goto('/funcionario/cardapio')
+  const titulo = `Sopa ${Date.now()}`
+  await page.getByLabel(/^dia$/i).fill('Segunda-feira')
+  await page.getByLabel(/ordem do dia/i).fill('1')
+  await page.getByLabel(/ordem da refeição/i).fill('1')
+  await page.getByLabel(/refeição/i).fill('Almoço')
+  await page.getByLabel(/título/i).fill(titulo)
+  await page.getByRole('button', { name: /adicionar item/i }).click()
+  await expect(page.getByText(titulo)).toBeVisible({ timeout: 7000 })
+})
