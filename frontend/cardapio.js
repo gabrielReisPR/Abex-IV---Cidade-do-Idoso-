@@ -64,16 +64,18 @@ function renderCardapio(itens) {
         grupo.refeicoes.forEach((item) => {
             const card = document.createElement('article');
             card.className = 'cardapio-meal-card';
+            const imgSrc =
+                typeof window.apiUrl === 'function'
+                    ? window.apiUrl(item.imagem_url)
+                    : item.imagem_url;
             card.innerHTML = `
-                <img src="${escapeHtml(item.imagem_url)}">
+                <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(item.refeicao + ' — ' + item.titulo)}">
                 <div class="cardapio-meal-body">
                     <span class="cardapio-meal-badge">${escapeHtml(item.refeicao)}</span>
                     <h3>${escapeHtml(item.titulo)}</h3>
                     <p>${escapeHtml(item.descricao)}</p>
                 </div>
             `;
-            const img = card.querySelector('img');
-            img.alt = `${item.refeicao} — ${item.titulo}`;
             mealsEl.appendChild(card);
         });
 

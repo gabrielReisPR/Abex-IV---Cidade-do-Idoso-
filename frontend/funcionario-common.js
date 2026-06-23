@@ -79,6 +79,7 @@
 
     function staffLogout() {
         localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
         window.location.href = 'login.html';
     }
 

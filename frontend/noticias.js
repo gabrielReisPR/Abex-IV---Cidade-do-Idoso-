@@ -33,12 +33,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
         noticias.forEach(noticia => {
             const sourceDomain = getDomain(noticia.fonte);
-            
+
             const article = document.createElement('article');
             article.className = 'news-item';
-            
+
             const href = escapeHtml(noticia.fonte);
+
+            // Imagem opcional: resolve via apiUrl (trata /uploads/... e URLs http).
+            let imageHtml = '';
+            if (noticia.imagem_url) {
+                const imgSrc =
+                    typeof window.apiUrl === 'function'
+                        ? window.apiUrl(noticia.imagem_url)
+                        : noticia.imagem_url;
+                imageHtml = `
+                    <div class="news-image">
+                        <img src="${escapeHtml(imgSrc)}" alt="Imagem da notícia: ${escapeHtml(noticia.titulo)}" loading="lazy">
+                    </div>
+                `;
+            }
+
             article.innerHTML = `
+                ${imageHtml}
                 <h3 class="news-title">
                     <a href="${href}" target="_blank" rel="noopener noreferrer">${escapeHtml(noticia.titulo)}</a>
                 </h3>
@@ -47,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span class="news-source">Fonte: ${escapeHtml(sourceDomain)}</span>
                 </div>
             `;
-            
+
             newsContainer.appendChild(article);
         });
     };

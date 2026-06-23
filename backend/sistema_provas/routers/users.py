@@ -12,6 +12,7 @@ from sistema_provas.schemas import (
     FilterPage,
     Message,
     UserList,
+    UserProfileUpdate,
     UserPublic,
     UserSchema,
 )
@@ -57,6 +58,7 @@ async def create_user(user: UserSchema, session: Session):
 
     return db_user
 
+
 @router.get(
     '/me',
     status_code=HTTPStatus.OK,
@@ -69,6 +71,27 @@ async def read_user_me(current_user: CurrentUser):
     Como o 'current_user' já faz o select no banco e valida o token,
     nós só precisamos retornar ele direto!
     """
+    return current_user
+
+
+@router.patch(
+    '/me',
+    status_code=HTTPStatus.OK,
+    response_model=UserPublic,
+    response_model_exclude_none=True,
+)
+async def update_user_me(
+    body: UserProfileUpdate,
+    session: Session,
+    current_user: CurrentUser,
+):
+    """Atualização parcial do perfil do próprio usuário (sem senha)."""
+    data = body.model_dump(exclude_unset=True)
+    for field, value in data.items():
+        setattr(current_user, field, value)
+    session.add(current_user)
+    await session.commit()
+    await session.refresh(current_user)
     return current_user
 
 

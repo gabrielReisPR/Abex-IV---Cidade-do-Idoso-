@@ -1,5 +1,19 @@
 .env
-.env
 backend/database.db
 __pycache__/
 *.pyc
+
+# Cobertura de testes
+.coverage
+backend/.coverage
+htmlcov/
+backend/htmlcov/
+
+# Uploads enviados em runtime (imagens de notícias)
+backend/uploads/
+
+# Node / Playwright (testes e2e do frontend)
+node_modules/
+frontend/node_modules/
+frontend/playwright-report/
+frontend/test-results/

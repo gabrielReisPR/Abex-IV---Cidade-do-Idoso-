@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Gestão</title>
+    <link rel="stylesheet" href="funcionario.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="accessibility.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="staff-layout">
+    <header class="header">
+        <div class="header-container staff-header-bar">
+            <div class="staff-header-brand">
+                <div class="title-section">
+                    <h1 class="main-title">Dashboard</h1>
+                    <p class="subtitle">Indicadores e métricas da gestão</p>
+                </div>
+            </div>
+            <div class="staff-header-actions">
+                <button type="button" class="staff-btn staff-btn-logout" onclick="staffLogout()" aria-label="Sair do painel">
+                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sair
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="staff-back-row">
+            <a href="funcionario-home.html" class="staff-back"><i class="fas fa-arrow-left" aria-hidden="true"></i> Voltar ao painel</a>
+        </div>
+
+        <!-- 1) Cartões de indicadores -->
+        <section class="staff-panel" aria-labelledby="titulo-indicadores">
+            <div class="dash-panel-head">
+                <h2 id="titulo-indicadores">Indicadores gerais</h2>
+                <button type="button" id="btn-export-csv" class="staff-btn staff-btn-primary"
+                        aria-label="Exportar inscrições e presenças em CSV">
+                    <i class="fas fa-file-csv" aria-hidden="true"></i> Exportar CSV
+                </button>
+            </div>
+            <div class="dash-cards" id="dash-cards" role="list" aria-live="polite">
+                <p class="staff-empty" id="dash-cards-loading">Carregando indicadores…</p>
+            </div>
+        </section>
+
+        <!-- 4) Alertas automáticos -->
+        <section class="staff-panel" aria-labelledby="titulo-alertas">
+            <h2 id="titulo-alertas"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Alertas de ocupação</h2>
+            <p class="staff-hint">Atividades com 90% ou mais das vagas preenchidas.</p>
+            <div id="dash-alertas" aria-live="polite">
+                <p class="staff-empty">Carregando alertas…</p>
+            </div>
+        </section>
+
+        <!-- 2) Gráfico de linha -->
+        <section class="staff-panel" aria-labelledby="titulo-grafico-linha">
+            <h2 id="titulo-grafico-linha">Inscrições por semana</h2>
+            <p class="staff-hint">Total de inscrições confirmadas a cada semana.</p>
+            <div class="dash-chart-wrap">
+                <canvas id="grafico-inscricoes" role="img"
+                        aria-label="Gráfico de linha com o total de inscrições por semana"></canvas>
+            </div>
+            <p class="staff-empty dash-chart-empty" id="grafico-inscricoes-empty" hidden>Sem dados para exibir.</p>
+        </section>
+
+        <!-- 3) Gráfico de barras -->
+        <section class="staff-panel" aria-labelledby="titulo-grafico-barras">
+            <h2 id="titulo-grafico-barras">Uso por funcionalidade</h2>
+            <p class="staff-hint">Quantidade de interações registradas por área do portal.</p>
+            <div class="dash-chart-wrap">
+                <canvas id="grafico-uso" role="img"
+                        aria-label="Gráfico de barras com o uso por funcionalidade"></canvas>
+            </div>
+            <p class="staff-empty dash-chart-empty" id="grafico-uso-empty" hidden>Sem dados para exibir.</p>
+        </section>
+
+        <!-- 5) Métricas de cache -->
+        <section class="staff-panel" aria-labelledby="titulo-cache">
+            <h2 id="titulo-cache">Métricas de cache</h2>
+            <p class="staff-hint">Desempenho da camada de cache da API.</p>
+            <div class="dash-cards dash-cards-compact" id="dash-cache" aria-live="polite">
+                <p class="staff-empty">Carregando métricas…</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="api-base.js"></script>
+    <script src="funcionario-common.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script src="dashboard.js"></script>
+    <script src="accessibility.js"></script>
+</body>
+</html>

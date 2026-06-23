@@ -11,20 +11,15 @@ dependencies = [
     "fastapi[standard] (>=0.128.3,<0.129.0)",
     "jinja2 (>=3.1.6,<4.0.0)",
     "passlib[bcrypt] (>=1.7.4,<2.0.0)",
-    "python-jose[cryptography] (>=3.5.0,<4.0.0)",
     "python-multipart (>=0.0.22,<0.0.23)",
     "pyjwt (>=2.11.0,<3.0.0)",
     "pwdlib[argon2] (>=0.3.0,<0.4.0)",
     "alembic (>=1.18.4,<2.0.0)",
-    "pdf2image (>=1.17.0,<2.0.0)",
-    "pillow (>=12.1.1,<13.0.0)",
-    "pdfplumber (>=0.11.9,<0.12.0)",
-    "groq (>=1.0.0,<2.0.0)",
-    "pymupdf4llm (>=0.2.9,<0.3.0)",
-    "pytesseract (>=0.3.13,<0.4.0)",
-    "anthropic (>=0.79.0,<0.80.0)",
     "asyncpg (>=0.30.0,<0.31.0)",
     "sqlalchemy[asyncio] (>=2.0.46,<3.0.0)",
+    "greenlet (>=3.0.0,<4.0.0)",
+    "fastapi-mail (>=1.4.1,<2.0.0)",
+    "redis (>=5.2.0,<6.0.0)",
 ]
 
 
@@ -39,6 +34,11 @@ extend-exclude = ['migrations']
 [tool.ruff.lint]
 preview = true
 select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.lint.per-file-ignores]
+# Em testes: magic values, import de helpers internos e asserts de
+# igualdade explícitos são idiomáticos.
+'tests/**' = ['PLR2004', 'PLC2701', 'PLC1901']
 
 [tool.ruff.format]
 preview = true

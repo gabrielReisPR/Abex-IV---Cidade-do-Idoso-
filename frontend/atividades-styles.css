@@ -691,3 +691,18 @@ a:focus {
     color: #00B931;
 }
 
+.catalog-badge-lotada {
+    color: #c0392b;
+}
+
+.catalog-row-vagas {
+    margin-top: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #5C6672;
+}
+
+.catalog-row-vagas.vagas-lotada {
+    color: #c0392b;
+}
+

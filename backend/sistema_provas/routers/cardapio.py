@@ -5,6 +5,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from sistema_provas.cache import (
+    cache_get_json,
+    cache_invalidate,
+    cache_set_json,
+)
 from sistema_provas.database import get_session
 from sistema_provas.models import MenuItem, User
 from sistema_provas.schemas import (
@@ -19,6 +24,8 @@ router = APIRouter(prefix='/cardapio', tags=['cardapio'])
 Session = Annotated[AsyncSession, Depends(get_session)]
 StaffUser = Annotated[User, Depends(get_current_staff_user)]
 
+CARDAPIO_CACHE_KEY = 'cardapio:list'
+
 
 def _item_out(row: MenuItem) -> CardapioItemOut:
     return CardapioItemOut(
@@ -32,9 +39,17 @@ def _item_out(row: MenuItem) -> CardapioItemOut:
     )
 
 
+async def _invalidar_cache():
+    await cache_invalidate(CARDAPIO_CACHE_KEY)
+
+
 @router.get('/', response_model=CardapioListaOut)
 async def listar_cardapio(session: Session):
     """Cardápio semanal (público). Ordenado por dia e tipo de refeição."""
+    cached = await cache_get_json(CARDAPIO_CACHE_KEY)
+    if cached is not None:
+        return cached
+
     rows = (
         await session.scalars(
             select(MenuItem).order_by(
@@ -43,7 +58,9 @@ async def listar_cardapio(session: Session):
             )
         )
     ).all()
-    return CardapioListaOut(itens=[_item_out(r) for r in rows])
+    payload = CardapioListaOut(itens=[_item_out(r) for r in rows]).model_dump()
+    await cache_set_json(CARDAPIO_CACHE_KEY, payload)
+    return payload
 
 
 @router.post(
@@ -68,6 +85,7 @@ async def criar_item_cardapio(
     session.add(row)
     await session.commit()
     await session.refresh(row)
+    await _invalidar_cache()
     return _item_out(row)
 
 
@@ -92,6 +110,7 @@ async def atualizar_item_cardapio(
     session.add(row)
     await session.commit()
     await session.refresh(row)
+    await _invalidar_cache()
     return _item_out(row)
 
 
@@ -109,3 +128,4 @@ async def remover_item_cardapio(
         )
     await session.delete(row)
     await session.commit()
+    await _invalidar_cache()

@@ -193,6 +193,17 @@ function initializeAccessibility() {
             }
         });
     });
+
+    // Permite acionar os pontos do carrossel pelo teclado (Enter/Espaço).
+    const dots = document.querySelectorAll('.carousel-dots .dot');
+    dots.forEach((dot, index) => {
+        dot.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                currentSlideFunc(index + 1);
+            }
+        });
+    });
 }
 
 document.addEventListener('visibilitychange', function() {

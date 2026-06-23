@@ -3,7 +3,7 @@ from http import HTTPStatus
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import and_, select
+from sqlalchemy import and_, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sistema_provas.database import get_session
@@ -38,14 +38,61 @@ STATUS_CONFIRMADO = 'confirmado'
 STATUS_CANCELADO = 'cancelado'
 
 
-def _atividade_out(row: Activity) -> AtividadeOut:
+def _atividade_out(
+    row: Activity, inscritos: int | None = None
+) -> AtividadeOut:
+    vagas = row.capacidade
+    disponiveis = None
+    if vagas is not None and inscritos is not None:
+        disponiveis = max(vagas - inscritos, 0)
     return AtividadeOut(
         id=row.id,
         titulo=row.title,
         hora=row.time_label,
         data=row.date_label,
         imagem_url=row.image_url,
+        vagas=vagas,
+        inscritos=inscritos,
+        vagas_disponiveis=disponiveis,
     )
+
+
+async def _contar_confirmados(session: AsyncSession, activity_id: int) -> int:
+    return (
+        await session.scalar(
+            select(func.count())
+            .select_from(ActivityEnrollment)
+            .where(
+                ActivityEnrollment.activity_id == activity_id,
+                ActivityEnrollment.status == STATUS_CONFIRMADO,
+            )
+        )
+    ) or 0
+
+
+async def _validar_capacidade(
+    session: AsyncSession, activity: Activity
+) -> None:
+    """Regra de negócio: bloqueia inscrição quando a atividade está lotada.
+
+    Só aplica quando a atividade define `capacidade`. None = sem limite.
+    """
+    if activity.capacidade is None:
+        return
+    # Lock pessimista na linha da atividade para evitar corrida (TOCTOU):
+    # inscrições concorrentes na mesma atividade são serializadas no
+    # Postgres até o commit; no sqlite dos testes é um no-op inofensivo.
+    await session.execute(
+        select(Activity.id)
+        .where(Activity.id == activity.id)
+        .with_for_update()
+    )
+    confirmados = await _contar_confirmados(session, activity.id)
+    if confirmados >= activity.capacidade:
+        raise HTTPException(
+            status_code=HTTPStatus.CONFLICT,
+            detail='Atividade lotada: não há vagas disponíveis',
+        )
 
 
 def _inscricao_out(enr: ActivityEnrollment, act: Activity) -> InscricaoOut:
@@ -101,8 +148,23 @@ async def listar_catalogo(session: Session):
     rows = (
         await session.scalars(select(Activity).order_by(Activity.id))
     ).all()
+
+    counts_rows = (
+        await session.execute(
+            select(
+                ActivityEnrollment.activity_id,
+                func.count(),
+            )
+            .where(ActivityEnrollment.status == STATUS_CONFIRMADO)
+            .group_by(ActivityEnrollment.activity_id)
+        )
+    ).all()
+    counts = {activity_id: total for activity_id, total in counts_rows}
+
     return CatalogoAtividadesOut(
-        atividades=[_atividade_out(a) for a in rows],
+        atividades=[
+            _atividade_out(a, inscritos=counts.get(a.id, 0)) for a in rows
+        ],
     )
 
 
@@ -121,9 +183,7 @@ async def minhas_inscricoes(
         .order_by(ActivityEnrollment.id)
     )
     result = await session.execute(stmt)
-    inscricoes = [
-        _inscricao_out(enr, act) for enr, act in result.all()
-    ]
+    inscricoes = [_inscricao_out(enr, act) for enr, act in result.all()]
     return MinhasInscricoesOut(inscricoes=inscricoes)
 
 
@@ -161,11 +221,14 @@ async def criar_inscricao(
                 status_code=HTTPStatus.CONFLICT,
                 detail='Você já está inscrito nesta atividade',
             )
+        await _validar_capacidade(session, activity)
         existing.status = STATUS_CONFIRMADO
         session.add(existing)
         await session.commit()
         await session.refresh(existing)
         return _inscricao_out(existing, activity)
+
+    await _validar_capacidade(session, activity)
 
     enrollment = ActivityEnrollment(
         user_id=current_user.id,
@@ -235,11 +298,12 @@ async def criar_atividade(
         time_label=body.hora,
         date_label=body.data,
         image_url=body.imagem_url,
+        capacidade=body.vagas,
     )
     session.add(act)
     await session.commit()
     await session.refresh(act)
-    return _atividade_out(act)
+    return _atividade_out(act, inscritos=0)
 
 
 @router.patch('/{activity_id}', response_model=AtividadeOut)
@@ -265,10 +329,13 @@ async def atualizar_atividade(
         act.date_label = body.data
     if body.imagem_url is not None:
         act.image_url = body.imagem_url
+    if body.vagas is not None:
+        act.capacidade = body.vagas
     session.add(act)
     await session.commit()
     await session.refresh(act)
-    return _atividade_out(act)
+    inscritos = await _contar_confirmados(session, act.id)
+    return _atividade_out(act, inscritos=inscritos)
 
 
 @router.delete('/{activity_id}', status_code=HTTPStatus.NO_CONTENT)

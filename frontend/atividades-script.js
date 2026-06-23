@@ -336,19 +336,42 @@ async function viewAllActivities() {
             const inc = byActivityId[a.id];
             const isConfirmed = inc && inc.status === 'confirmado';
 
+            // Ocupação: só exibe quando há limite de vagas (vagas != null).
+            const temLimite = a.vagas != null;
+            const lotada = temLimite && a.vagas_disponiveis === 0;
+            let ocupacaoHtml = '';
+            if (temLimite) {
+                const inscritos = a.inscritos != null ? a.inscritos : 0;
+                const classe = lotada
+                    ? 'catalog-row-vagas vagas-lotada'
+                    : 'catalog-row-vagas';
+                const texto = lotada
+                    ? 'Atividade lotada'
+                    : `${inscritos} de ${a.vagas} vagas preenchidas`;
+                ocupacaoHtml = `<div class="${classe}">${escapeHtml(texto)}</div>`;
+            }
+
             let actionHtml = '';
             if (isConfirmed) {
+                actionHtml = '<span class="catalog-badge">Inscrito</span>';
+            } else if (lotada) {
                 actionHtml =
-                    '<span class="catalog-badge">Inscrito</span>';
+                    '<span class="catalog-badge catalog-badge-lotada">Lotada</span>';
             } else {
                 actionHtml = `<button type="button" class="btn-inscrever" data-activity-id="${a.id}">Inscrever-se</button>`;
             }
 
+            const imgSrc =
+                typeof window.apiUrl === 'function'
+                    ? window.apiUrl(a.imagem_url)
+                    : a.imagem_url;
+
             row.innerHTML = `
-                <img src="${escapeHtml(a.imagem_url)}" alt="${escapeHtml(a.titulo)}">
+                <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(a.titulo)}">
                 <div class="catalog-row-info">
                     <h4>${escapeHtml(a.titulo)}</h4>
                     <div class="catalog-row-meta">${escapeHtml(a.hora)} · ${escapeHtml(a.data)}</div>
+                    ${ocupacaoHtml}
                 </div>
                 ${actionHtml}
             `;

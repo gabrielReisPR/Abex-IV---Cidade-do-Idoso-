@@ -110,6 +110,7 @@ async def staff_user(session):
     user = UserFactory(
         password=get_password_hash(password),
         is_staff=True,
+        role='funcionario',
         username='staff1',
         email='staff1@test.com',
     )
@@ -127,6 +128,35 @@ def staff_token(client, staff_user):
         data={
             'username': staff_user.email,
             'password': staff_user.clean_password,
+        },
+    )
+    return response.json()['access_token']
+
+
+@pytest_asyncio.fixture
+async def admin_user(session):
+    password = 'adminsecret'
+    user = UserFactory(
+        password=get_password_hash(password),
+        is_staff=True,
+        role='admin',
+        username='admin1',
+        email='admin1@test.com',
+    )
+    session.add(user)
+    await session.commit()
+    await session.refresh(user)
+    user.clean_password = password
+    return user
+
+
+@pytest.fixture
+def admin_token(client, admin_user):
+    response = client.post(
+        '/auth/token',
+        data={
+            'username': admin_user.email,
+            'password': admin_user.clean_password,
         },
     )
     return response.json()['access_token']

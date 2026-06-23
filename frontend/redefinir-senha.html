@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redefinir Senha</title>
+    <link rel="stylesheet" href="redefinir-senha.css">
+    <link rel="stylesheet" href="accessibility.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Redefinir Senha</h1>
+            <p class="subtitle">Crie uma nova senha para a sua conta. Digite a mesma senha nos dois campos para confirmar.</p>
+        </div>
+
+        <div class="success-message" id="successMessage" role="status" aria-live="polite" tabindex="-1">
+            <div class="success-icon" aria-hidden="true">✓</div>
+            <p style="font-size: 1.25rem;"><strong>Senha redefinida com sucesso!</strong></p>
+            <p style="margin-top: 0.5rem; font-size: 1rem;">Você já pode entrar com a sua nova senha.</p>
+            <a class="login-link" href="login.html">Ir para o Login</a>
+        </div>
+
+        <div class="invalid-message" id="invalidMessage" role="alert" aria-live="assertive" tabindex="-1">
+            <p style="font-size: 1.125rem;"><strong>Link inválido</strong></p>
+            <p style="margin-top: 0.5rem; font-size: 1rem;">O link de redefinição está incompleto ou expirou. Solicite um novo link na página de recuperação.</p>
+            <a class="login-link" href="esqueci-senha.html">Solicitar novo link</a>
+        </div>
+
+        <form id="resetForm" novalidate>
+            <div class="form-group">
+                <label for="novaSenha">Nova Senha</label>
+                <input
+                    type="password"
+                    id="novaSenha"
+                    name="novaSenha"
+                    placeholder="Digite a nova senha"
+                    autocomplete="new-password"
+                    minlength="4"
+                    aria-describedby="hintSenha errorMessage"
+                    required
+                >
+                <p class="field-hint" id="hintSenha">Mínimo de 4 caracteres.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmarSenha">Confirmar Nova Senha</label>
+                <input
+                    type="password"
+                    id="confirmarSenha"
+                    name="confirmarSenha"
+                    placeholder="Digite a senha novamente"
+                    autocomplete="new-password"
+                    minlength="4"
+                    aria-describedby="errorMessage"
+                    required
+                >
+            </div>
+
+            <div class="error-message" id="errorMessage" role="alert" aria-live="assertive"></div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span class="btn-text">Redefinir Senha</span>
+                <div class="spinner" aria-hidden="true"></div>
+            </button>
+        </form>
+
+        <div class="back-link">
+            <a href="login.html">← Voltar para o Login</a>
+        </div>
+    </div>
+
+    <script src="api-base.js"></script>
+    <script src="redefinir-senha.js"></script>
+    <script src="accessibility.js"></script>
+</body>
+</html>

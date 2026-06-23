@@ -29,11 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
         submitBtn.disabled = true;
         submitBtn.classList.add("loading");
 
-        const base =
-            typeof window.API_BASE_URL === 'string' && window.API_BASE_URL
-                ? window.API_BASE_URL
-                : 'http://localhost:8000';
-        const backendUrl = `${base}/password/reset-request`;
+        const backendUrl = window.apiUrl('/password/reset-request');
 
         try {
             const response = await fetch(backendUrl, {
@@ -49,12 +45,21 @@ document.addEventListener("DOMContentLoaded", () => {
             if (response.ok) {
                 resetForm.style.display = "none";
                 successMessage.classList.add("show");
+                successMessage.focus();
             } else {
-                const errorData = await response.json();
-                errorMessage.textContent = errorData.message || "E-mail não encontrado ou inválido.";
+                let message = "Não foi possível processar o pedido. Tente novamente.";
+                try {
+                    const errorData = await response.json();
+                    if (errorData && errorData.message) {
+                        message = errorData.message;
+                    }
+                } catch (parseError) {
+                    /* mantém mensagem padrão */
+                }
+                errorMessage.textContent = message;
                 errorMessage.classList.add("show");
                 emailInput.classList.add("error");
-                
+
                 submitBtn.disabled = false;
                 submitBtn.classList.remove("loading");
             }

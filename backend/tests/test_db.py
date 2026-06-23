@@ -33,6 +33,7 @@ async def test_create_user(session, mock_db_time):
         'state': None,
         'zip_code': None,
         'is_staff': False,
+        'role': 'idoso',
         'created_at': time,
         'updated_at': time,
     }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cidade dos Idosos - Chapecó</title>
     <link rel="stylesheet" href="home-styles.css">
+    <link rel="stylesheet" href="accessibility.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -21,8 +22,11 @@
 
             <div class="user-profile" style="display: flex; align-items: center; gap: 15px;">
                 <span id="user-greeting" style="font-size: 15px; font-weight: 500; display: none;">Carregando...</span>
-                <button onclick="logout()" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-                    <i class="fas fa-sign-out-alt"></i> Sair
+                <a href="perfil.html" aria-label="Acessar Meu Perfil" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-user" aria-hidden="true"></i> Meu Perfil
+                </a>
+                <button onclick="logout()" aria-label="Sair da conta" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sair
                 </button>
             </div>
         </div>
@@ -32,7 +36,7 @@
         <section class="welcome-section">
             <div class="welcome-card">
                 <div class="welcome-icon">
-                    <i class="fas fa-heart"></i>
+                    <i class="fas fa-heart" aria-hidden="true"></i>
                 </div>
                 <div class="welcome-text">
                     <h2 id="welcome-title">Bem-vindos ao Portal da Cidade dos Idosos</h2>
@@ -47,8 +51,8 @@
                 <p>Fique por dentro das últimas novidades sobre saúde e bem-estar</p>
             </div>
 
-            <div class="carousel-container">
-                <div class="carousel" id="newsCarousel">
+            <div class="carousel-container" role="region" aria-roledescription="carrossel" aria-label="Notícias em destaque">
+                <div class="carousel" id="newsCarousel" aria-live="polite">
                     <div class="news-item active" data-index="0">
                         <div class="news-image">
                             <img src="noticias/virada_zen.webp" alt="Virada Zen">
@@ -93,16 +97,16 @@
                 </div>
 
                 <div class="carousel-controls">
-                    <button class="carousel-btn prev" onclick="prevSlide()">
-                        <i class="fas fa-chevron-left"></i>
+                    <button class="carousel-btn prev" onclick="prevSlide()" aria-label="Notícia anterior">
+                        <i class="fas fa-chevron-left" aria-hidden="true"></i>
                     </button>
-                    <div class="carousel-dots">
-                        <span class="dot active" onclick="currentSlide(1)"></span>
-                        <span class="dot" onclick="currentSlide(2)"></span>
-                        <span class="dot" onclick="currentSlide(3)"></span>
+                    <div class="carousel-dots" role="tablist" aria-label="Selecionar notícia">
+                        <span class="dot active" onclick="currentSlide(1)" role="button" tabindex="0" aria-label="Ir para a notícia 1"></span>
+                        <span class="dot" onclick="currentSlide(2)" role="button" tabindex="0" aria-label="Ir para a notícia 2"></span>
+                        <span class="dot" onclick="currentSlide(3)" role="button" tabindex="0" aria-label="Ir para a notícia 3"></span>
                     </div>
-                    <button class="carousel-btn next" onclick="nextSlide()">
-                        <i class="fas fa-chevron-right"></i>
+                    <button class="carousel-btn next" onclick="nextSlide()" aria-label="Próxima notícia">
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
@@ -112,7 +116,7 @@
             <div class="info-grid">
                 <div class="info-card">
                     <div class="info-icon">
-                        <i class="fas fa-calendar-alt"></i>
+                        <i class="fas fa-calendar-alt" aria-hidden="true"></i>
                     </div>
                     <h3>Atividades Semanais</h3>
                     <p>Participe das nossas atividades regulares: yoga, computação, natação e muito mais.</p>
@@ -120,7 +124,7 @@
 
                 <div class="info-card">
                     <div class="info-icon">
-                        <i class="fas fa-utensils"></i>
+                        <i class="fas fa-utensils" aria-hidden="true"></i>
                     </div>
                     <h3>Cardápio Saudável</h3>
                     <p>Confira nosso cardápio balanceado, elaborado especialmente para a terceira idade.</p>
@@ -128,7 +132,7 @@
 
                 <div class="info-card">
                     <div class="info-icon">
-                        <i class="fas fa-newspaper"></i>
+                        <i class="fas fa-newspaper" aria-hidden="true"></i>
                     </div>
                     <h3>Últimas Notícias</h3>
                     <p>Mantenha-se informado com as principais notícias sobre saúde e bem-estar.</p>
@@ -139,21 +143,25 @@
 
     <nav class="bottom-nav" aria-label="Navegação principal">
         <div class="nav-container">
-            <a href="home.html" class="nav-item active">
-                <i class="fas fa-home"></i>
+            <a href="home.html" class="nav-item active" aria-current="page" aria-label="Início">
+                <i class="fas fa-home" aria-hidden="true"></i>
                 <span>Home</span>
             </a>
-            <a href="atividades.html" class="nav-item">
-                <i class="fas fa-calendar-check"></i>
+            <a href="atividades.html" class="nav-item" aria-label="Atividades">
+                <i class="fas fa-calendar-check" aria-hidden="true"></i>
                 <span>Atividades</span>
             </a>
-            <a href="cardapio.html" class="nav-item">
-                <i class="fas fa-utensils"></i>
+            <a href="cardapio.html" class="nav-item" aria-label="Cardápio">
+                <i class="fas fa-utensils" aria-hidden="true"></i>
                 <span>Cardápio</span>
             </a>
-            <a href="noticias.html" class="nav-item">
-                <i class="fas fa-newspaper"></i>
+            <a href="noticias.html" class="nav-item" aria-label="Notícias">
+                <i class="fas fa-newspaper" aria-hidden="true"></i>
                 <span>Notícias</span>
+            </a>
+            <a href="perfil.html" class="nav-item" aria-label="Meu Perfil">
+                <i class="fas fa-user" aria-hidden="true"></i>
+                <span>Perfil</span>
             </a>
         </div>
     </nav>
@@ -180,8 +188,8 @@
 
             <div class="footer-section">
                 <h4>Acessibilidade</h4>
-                <button class="accessibility-btn" onclick="toggleVoiceAccessibility()">
-                    <i class="fas fa-volume-up"></i>
+                <button class="accessibility-btn" onclick="toggleVoiceAccessibility()" aria-label="Ativar acessibilidade por voz" aria-pressed="false">
+                    <i class="fas fa-volume-up" aria-hidden="true"></i>
                     <span>Ativar acessibilidade por voz</span>
                 </button>
             </div>
@@ -195,5 +203,6 @@
     <script src="api-base.js?v=4"></script>
     <script src="home-script.js?v=4"></script>
     <script src="disable-floating-toast.js?v=4"></script>
+    <script src="accessibility.js"></script>
 </body>
 </html>

@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!list.length) {
             const tr = document.createElement('tr');
             const td = document.createElement('td');
-            td.colSpan = 3;
+            td.colSpan = 4;
             td.className = 'staff-empty';
             td.textContent = 'Nenhuma notícia cadastrada.';
             tr.appendChild(td);
@@ -33,6 +33,53 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         list.forEach((n) => {
             const tr = document.createElement('tr');
+
+            // Coluna imagem: miniatura atual + envio de nova imagem
+            const tdImg = document.createElement('td');
+            const imgWrap = document.createElement('div');
+            imgWrap.className = 'staff-news-img-cell';
+
+            const thumb = document.createElement('img');
+            thumb.className = 'staff-news-thumb';
+            thumb.alt = n.imagem_url ? `Imagem da notícia: ${n.titulo || ''}` : 'Sem imagem';
+            thumb.width = 72;
+            thumb.height = 54;
+            if (n.imagem_url) {
+                thumb.src = window.apiUrl(n.imagem_url);
+                thumb.hidden = false;
+            } else {
+                thumb.hidden = true;
+            }
+
+            const semImg = document.createElement('span');
+            semImg.className = 'staff-news-noimg';
+            semImg.textContent = 'Sem imagem';
+            semImg.hidden = !!n.imagem_url;
+
+            const fileId = `n-img-${n.id}`;
+            const fileLabel = document.createElement('label');
+            fileLabel.className = 'staff-btn staff-btn-secondary staff-btn-sm staff-file-label';
+            fileLabel.htmlFor = fileId;
+            fileLabel.textContent = n.imagem_url ? 'Trocar imagem' : 'Enviar imagem';
+
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.id = fileId;
+            fileInput.accept = 'image/*';
+            fileInput.className = 'staff-file-input';
+            fileInput.setAttribute('aria-label', `Enviar imagem para a notícia ${n.titulo || ''}`);
+            fileInput.addEventListener('change', () => {
+                const file = fileInput.files && fileInput.files[0];
+                if (file) enviarImagem(n.id, file, fileLabel);
+                fileInput.value = '';
+            });
+
+            imgWrap.appendChild(thumb);
+            imgWrap.appendChild(semImg);
+            imgWrap.appendChild(fileInput);
+            imgWrap.appendChild(fileLabel);
+            tdImg.appendChild(imgWrap);
+
             const td1 = document.createElement('td');
             td1.textContent = n.titulo || '—';
 
@@ -64,11 +111,32 @@ document.addEventListener('DOMContentLoaded', async () => {
             wrap.appendChild(bEdit);
             wrap.appendChild(bDel);
             td3.appendChild(wrap);
+            tr.appendChild(tdImg);
             tr.appendChild(td1);
             tr.appendChild(td2);
             tr.appendChild(td3);
             tbody.appendChild(tr);
         });
+    }
+
+    async function enviarImagem(id, file, labelEl) {
+        const fd = new FormData();
+        fd.append('arquivo', file);
+        // Multipart: NÃO definir Content-Type manualmente (o browser inclui o boundary).
+        await withBusy(labelEl, async () => {
+            const r = await fetch(`${API_BASE}/noticias/${id}/imagem`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${ctx.token}` },
+                body: fd,
+            });
+            if (r.ok) {
+                staffNotify('Imagem enviada', 'success');
+                carregar();
+            } else {
+                const err = await r.json().catch(() => ({}));
+                staffNotify(fmtErr(err), 'error');
+            }
+        }, 'Enviando…');
     }
 
     async function excluirNoticia(id) {

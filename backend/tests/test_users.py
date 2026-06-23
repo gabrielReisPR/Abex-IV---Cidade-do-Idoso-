@@ -20,6 +20,7 @@ def test_create_user(client):
         'email': 'alice@example.com',
         'username': 'alice',
         'is_staff': False,
+        'role': 'idoso',
     }
 
 
@@ -80,6 +81,7 @@ def test_update_user(client, user, token):
         'email': 'gabriel@example.com',
         'username': 'user',
         'is_staff': False,
+        'role': 'idoso',
     }
 
 
@@ -192,6 +194,23 @@ def test_update_user_with_wrong_user(client, other_user, token):
     )
     assert response.status_code == HTTPStatus.FORBIDDEN
     assert response.json() == {'detail': 'Not enough permissions'}
+
+
+def test_patch_user_me(client, user, token):
+    response = client.patch(
+        '/users/me',
+        headers={'Authorization': f'Bearer {token}'},
+        json={'first_name': 'Maria', 'city': 'Chapecó'},
+    )
+    assert response.status_code == HTTPStatus.OK
+    body = response.json()
+    assert body['first_name'] == 'Maria'
+    assert body['username'] == user.username
+
+
+def test_patch_user_me_sem_token(client):
+    response = client.patch('/users/me', json={'first_name': 'X'})
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
 
 
 def test_delete_user_wrong_user(client, other_user, token):

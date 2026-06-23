@@ -6,6 +6,7 @@
     <title>Atividades Inscritas - Cidade dos Idosos</title>
     <link rel="stylesheet" href="home-styles.css">
     <link rel="stylesheet" href="atividades-styles.css">
+    <link rel="stylesheet" href="accessibility.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -30,7 +31,7 @@
             <section class="activity-summary">
                 <div class="summary-card">
                     <div class="summary-icon">
-                        <i class="fas fa-calendar-check"></i>
+                        <i class="fas fa-calendar-check" aria-hidden="true"></i>
                     </div>
                     <div class="summary-text">
                         <h2>Suas Atividades</h2>
@@ -49,12 +50,12 @@
             <!-- Action Buttons -->
             <section class="action-section">
                 <div class="action-buttons">
-                    <button class="btn-cancel" onclick="cancelActivity()">
-                        <i class="fas fa-times-circle"></i>
+                    <button class="btn-cancel" onclick="cancelActivity()" aria-label="Cancelar atividade">
+                        <i class="fas fa-times-circle" aria-hidden="true"></i>
                         CANCELAR ATIVIDADE
                     </button>
-                    <button class="btn-secondary" onclick="viewAllActivities()">
-                        <i class="fas fa-list"></i>
+                    <button class="btn-secondary" onclick="viewAllActivities()" aria-label="Ver todas as atividades">
+                        <i class="fas fa-list" aria-hidden="true"></i>
                         VER TODAS AS ATIVIDADES
                     </button>
                 </div>
@@ -65,21 +66,25 @@
     <!-- Bottom Navigation -->
     <nav class="bottom-nav" aria-label="Navegação principal">
         <div class="nav-container">
-            <a href="home.html" class="nav-item">
-                <i class="fas fa-home"></i>
+            <a href="home.html" class="nav-item" aria-label="Início">
+                <i class="fas fa-home" aria-hidden="true"></i>
                 <span>Home</span>
             </a>
-            <a href="atividades.html" class="nav-item active">
-                <i class="fas fa-calendar-check"></i>
+            <a href="atividades.html" class="nav-item active" aria-current="page" aria-label="Atividades">
+                <i class="fas fa-calendar-check" aria-hidden="true"></i>
                 <span>Atividades</span>
             </a>
-            <a href="cardapio.html" class="nav-item">
-                <i class="fas fa-utensils"></i>
+            <a href="cardapio.html" class="nav-item" aria-label="Cardápio">
+                <i class="fas fa-utensils" aria-hidden="true"></i>
                 <span>Cardápio</span>
             </a>
-            <a href="noticias.html" class="nav-item">
-                <i class="fas fa-newspaper"></i>
+            <a href="noticias.html" class="nav-item" aria-label="Notícias">
+                <i class="fas fa-newspaper" aria-hidden="true"></i>
                 <span>Notícias</span>
+            </a>
+            <a href="perfil.html" class="nav-item" aria-label="Meu Perfil">
+                <i class="fas fa-user" aria-hidden="true"></i>
+                <span>Perfil</span>
             </a>
         </div>
     </nav>
@@ -107,8 +112,8 @@
 
             <div class="footer-section">
                 <h4>Acessibilidade</h4>
-                <button class="accessibility-btn" onclick="toggleVoiceAccessibility()">
-                    <i class="fas fa-volume-up"></i>
+                <button class="accessibility-btn" onclick="toggleVoiceAccessibility()" aria-label="Ativar acessibilidade por voz" aria-pressed="false">
+                    <i class="fas fa-volume-up" aria-hidden="true"></i>
                     <span>Ativar acessibilidade por voz</span>
                 </button>
             </div>
@@ -120,12 +125,12 @@
     </footer>
 
     <!-- Modal for Cancel Activity -->
-    <div id="cancelModal" class="modal">
+    <div id="cancelModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="cancelModalTitle">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Cancelar Atividade</h3>
-                <button class="modal-close" onclick="closeCancelModal()">
-                    <i class="fas fa-times"></i>
+                <h3 id="cancelModalTitle">Cancelar Atividade</h3>
+                <button class="modal-close" onclick="closeCancelModal()" aria-label="Fechar janela">
+                    <i class="fas fa-times" aria-hidden="true"></i>
                 </button>
             </div>
             <div class="modal-body">
@@ -145,17 +150,17 @@
     </div>
 
     <!-- Modal: catálogo para novas inscrições -->
-    <div id="catalogModal" class="modal">
+    <div id="catalogModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="catalogModalTitle">
         <div class="modal-content modal-catalog">
             <div class="modal-header">
-                <h3>Todas as atividades</h3>
-                <button type="button" class="modal-close" onclick="closeCatalogModal()">
-                    <i class="fas fa-times"></i>
+                <h3 id="catalogModalTitle">Todas as atividades</h3>
+                <button type="button" class="modal-close" onclick="closeCatalogModal()" aria-label="Fechar janela">
+                    <i class="fas fa-times" aria-hidden="true"></i>
                 </button>
             </div>
             <div class="modal-body">
                 <p class="catalog-intro">Escolha uma atividade para se inscrever.</p>
-                <div id="catalogList" class="catalog-list"></div>
+                <div id="catalogList" class="catalog-list" aria-live="polite"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-secondary" onclick="closeCatalogModal()">Fechar</button>
@@ -166,6 +171,7 @@
     <script src="api-base.js?v=4"></script>
     <script src="atividades-script.js?v=4"></script>
     <script src="disable-floating-toast.js?v=4"></script>
+    <script src="accessibility.js"></script>
 </body>
 </html>
 

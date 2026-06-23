@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atividades — Gestão</title>
     <link rel="stylesheet" href="funcionario.css">
+    <link rel="stylesheet" href="accessibility.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .staff-occupancy { display: inline-block; margin-top: 0.25rem; font-size: 0.9375rem; font-weight: 600; color: #01200F; }
+        .staff-occupancy-full { color: #b00020; }
+        .staff-occupancy-open { color: #00800f; }
+    </style>
 </head>
 <body class="staff-layout">
     <header class="header">
@@ -39,6 +45,9 @@
                 </label>
                 <label>URL da imagem
                     <input type="url" id="a-img" required maxlength="500" placeholder="https://…">
+                </label>
+                <label>Vagas (capacidade máxima — opcional)
+                    <input type="number" id="a-vagas" min="0" step="1" inputmode="numeric" placeholder="Deixe em branco para sem limite" autocomplete="off">
                 </label>
                 <button type="submit" id="btn-criar-atividade" class="staff-btn staff-btn-primary"><i class="fas fa-plus" aria-hidden="true"></i> Criar</button>
             </form>
@@ -84,5 +93,6 @@
     <script src="api-base.js"></script>
     <script src="funcionario-common.js"></script>
     <script src="funcionario-atividades.js"></script>
+    <script src="accessibility.js"></script>
 </body>
 </html>

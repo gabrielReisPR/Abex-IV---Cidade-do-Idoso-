@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil — Cidade do Idoso</title>
+    <link rel="stylesheet" href="home-styles.css">
+    <link rel="stylesheet" href="cardapio.css">
+    <link rel="stylesheet" href="perfil.css">
+    <link rel="stylesheet" href="accessibility.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-section">
+                <img src="./IMAGENS/pasted_file_QqQlpv_Roberto-Carlos-2-1024x683.jpg" alt="Centro Roberto Carlos" class="logo">
+                <div class="title-section">
+                    <h1 class="main-title">Roberto Carlos</h1>
+                    <p class="subtitle">Chapecó - Santa Catarina</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content perfil-page">
+        <div class="container">
+            <section class="cardapio-section">
+                <div class="cardapio-header">
+                    <div class="cardapio-icon">
+                        <i class="fas fa-user" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h2>Meu perfil</h2>
+                        <p>Veja e atualize os seus dados de cadastro.</p>
+                    </div>
+                </div>
+
+                <div class="error-message" id="errorMessage" role="alert"></div>
+                <div class="loading-spinner" id="loadingSpinner">
+                    <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+                    <span>Carregando seus dados…</span>
+                </div>
+
+                <form id="perfilForm" class="perfil-form" novalidate hidden>
+                    <fieldset class="perfil-fieldset">
+                        <legend>Dados da conta</legend>
+                        <div class="perfil-grid">
+                            <div class="form-group">
+                                <label for="username">Usuário</label>
+                                <input type="text" id="username" name="username" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">E-mail</label>
+                                <input type="email" id="email" name="email" readonly>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="perfil-fieldset">
+                        <legend>Dados pessoais</legend>
+                        <div class="perfil-grid">
+                            <div class="form-group">
+                                <label for="first_name">Nome</label>
+                                <input type="text" id="first_name" name="first_name" autocomplete="given-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">Sobrenome</label>
+                                <input type="text" id="last_name" name="last_name" autocomplete="family-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Telefone</label>
+                                <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="(49) 99999-9999">
+                            </div>
+                            <div class="form-group">
+                                <label for="birth_date">Data de nascimento</label>
+                                <input type="date" id="birth_date" name="birth_date" autocomplete="bday">
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gênero</label>
+                                <select id="gender" name="gender">
+                                    <option value="">Prefiro não informar</option>
+                                    <option value="feminino">Feminino</option>
+                                    <option value="masculino">Masculino</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="perfil-fieldset">
+                        <legend>Endereço</legend>
+                        <div class="perfil-grid">
+                            <div class="form-group full-width">
+                                <label for="address">Endereço</label>
+                                <input type="text" id="address" name="address" autocomplete="street-address" placeholder="Rua, número, bairro">
+                            </div>
+                            <div class="form-group">
+                                <label for="city">Cidade</label>
+                                <input type="text" id="city" name="city" autocomplete="address-level2">
+                            </div>
+                            <div class="form-group">
+                                <label for="state">Estado</label>
+                                <input type="text" id="state" name="state" autocomplete="address-level1" placeholder="Ex.: SC" maxlength="2">
+                            </div>
+                            <div class="form-group">
+                                <label for="zip_code">CEP</label>
+                                <input type="text" id="zip_code" name="zip_code" autocomplete="postal-code" inputmode="numeric" placeholder="00000-000">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <p class="perfil-feedback" id="feedback" aria-live="polite"></p>
+
+                    <div class="perfil-actions">
+                        <button type="submit" class="perfil-btn perfil-btn-save" id="saveButton">
+                            <i class="fas fa-floppy-disk" aria-hidden="true"></i>
+                            <span>Salvar alterações</span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <nav class="bottom-nav">
+        <div class="nav-container">
+            <a href="home.html" class="nav-item">
+                <i class="fas fa-home" aria-hidden="true"></i>
+                <span>Início</span>
+            </a>
+            <a href="atividades.html" class="nav-item">
+                <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                <span>Atividades</span>
+            </a>
+            <a href="cardapio.html" class="nav-item">
+                <i class="fas fa-utensils" aria-hidden="true"></i>
+                <span>Cardápio</span>
+            </a>
+            <a href="perfil.html" class="nav-item active">
+                <i class="fas fa-user" aria-hidden="true"></i>
+                <span>Perfil</span>
+            </a>
+            <button type="button" class="nav-item nav-logout" id="logoutButton" aria-label="Sair da conta">
+                <i class="fas fa-arrow-right-from-bracket" aria-hidden="true"></i>
+                <span>Sair</span>
+            </button>
+        </div>
+    </nav>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Município de Chapecó</h4>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone" aria-hidden="true"></i>
+                        <span>(49) 3321-8400</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                        <span>Chapecó, Santa Catarina, Brasil</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                        <span>cidadedoidoso@chapeco.sc.gov.br</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Portal Cidade do Idoso - Copyright © 2024 - Todos os Direitos Reservados</p>
+        </div>
+    </footer>
+
+    <script src="api-base.js?v=4"></script>
+    <script src="perfil.js?v=4"></script>
+    <script src="disable-floating-toast.js?v=4"></script>
+    <script src="accessibility.js?v=4"></script>
+</body>
+</html>

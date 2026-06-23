@@ -2,3 +2,12 @@
 *.md
 Dockerfile
 .dockerignore
+
+# Ferramental de testes e2e (não vai para a imagem nginx)
+node_modules
+e2e
+playwright.config.js
+package.json
+package-lock.json
+playwright-report
+test-results

@@ -19,6 +19,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     presData.value = todayISO();
 
+    // Converte o valor do campo "vagas" em número inteiro >= 0, ou null quando vazio (sem limite).
+    function parseVagas(raw) {
+        const s = String(raw ?? '').trim();
+        if (s === '') return null;
+        const n = Number(s);
+        if (!Number.isFinite(n) || n < 0) return null;
+        return Math.floor(n);
+    }
+
     function setSelectedCard(id) {
         listaEl.querySelectorAll('.staff-activity-card').forEach((el) => {
             el.classList.toggle('is-selected', Number(el.dataset.activityId) === id);
@@ -55,6 +64,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             meta.textContent = `${a.hora || '—'} · ${a.data || '—'}`;
             left.appendChild(strong);
             left.appendChild(meta);
+
+            const ocup = document.createElement('span');
+            ocup.className = 'staff-occupancy';
+            const inscritos = Number(a.inscritos) || 0;
+            if (a.vagas === null || a.vagas === undefined) {
+                ocup.textContent = `Inscritos: ${inscritos} · Vagas: sem limite`;
+                ocup.classList.add('staff-occupancy-open');
+            } else {
+                const vagas = Number(a.vagas);
+                const disp = a.vagas_disponiveis === null || a.vagas_disponiveis === undefined
+                    ? Math.max(vagas - inscritos, 0)
+                    : Number(a.vagas_disponiveis);
+                ocup.textContent = `Ocupação: ${inscritos}/${vagas} · ${disp} vaga(s) disponível(is)`;
+                ocup.classList.add(disp <= 0 ? 'staff-occupancy-full' : 'staff-occupancy-open');
+            }
+            left.appendChild(ocup);
 
             const actions = document.createElement('div');
             actions.className = 'staff-activity-actions';
@@ -117,9 +142,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 { id: 'hora', label: 'Horário', value: a.hora, required: true },
                 { id: 'data', label: 'Data / recorrência', value: a.data, required: true },
                 { id: 'imagem_url', label: 'URL da imagem', type: 'url', value: a.imagem_url, required: true },
+                {
+                    id: 'vagas',
+                    label: 'Vagas (capacidade — vazio = sem limite)',
+                    type: 'number',
+                    value: a.vagas ?? '',
+                    placeholder: 'Sem limite',
+                    required: false,
+                },
             ],
         });
         if (!out) return;
+        const vagas = parseVagas(out.vagas);
         const p = await fetch(`${API_BASE}/atividades/${id}`, {
             method: 'PATCH',
             headers: staffAuthHeaders(),
@@ -128,6 +162,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 hora: out.hora,
                 data: out.data,
                 imagem_url: out.imagem_url,
+                vagas,
             }),
         });
         if (p.ok) {
@@ -276,6 +311,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 data: document.getElementById('a-data').value.trim(),
                 imagem_url: document.getElementById('a-img').value.trim(),
             };
+            const vagas = parseVagas(document.getElementById('a-vagas').value);
+            if (vagas !== null) payload.vagas = vagas;
             const res = await fetch(`${API_BASE}/atividades/`, {
                 method: 'POST',
                 headers: staffAuthHeaders(),

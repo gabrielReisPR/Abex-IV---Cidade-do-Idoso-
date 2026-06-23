@@ -30,8 +30,16 @@ class UserPublic(BaseModel):
     email: EmailStr
     id: int
     is_staff: bool = False
+    role: str = 'idoso'
     first_name: Optional[str] = None
     last_name: Optional[str] = None
+    phone: Optional[str] = None
+    birth_date: Optional[date] = None
+    gender: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    zip_code: Optional[str] = None
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -39,9 +47,33 @@ class UserList(BaseModel):
     users: list[UserPublic]
 
 
+class UserProfileUpdate(BaseModel):
+    """Atualização parcial do perfil (sem alterar senha/email/username)."""
+
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    phone: Optional[str] = None
+    birth_date: Optional[date] = None
+    gender: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    zip_code: Optional[str] = None
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str
+    refresh_token: Optional[str] = None
+
+
+class RefreshTokenBody(BaseModel):
+    refresh_token: str
+
+
+class PasswordResetConfirmBody(BaseModel):
+    token: str
+    nova_senha: str = Field(min_length=4, max_length=200)
 
 
 class FilterPage(BaseModel):
@@ -55,6 +87,10 @@ class AtividadeOut(BaseModel):
     hora: str
     data: str
     imagem_url: str
+    # Capacidade/ocupação (None quando não aplicável/sem limite).
+    vagas: Optional[int] = None
+    inscritos: Optional[int] = None
+    vagas_disponiveis: Optional[int] = None
 
 
 class InscricaoOut(BaseModel):
@@ -114,6 +150,7 @@ class NoticiaOut(BaseModel):
     titulo: str
     descricao: str
     fonte: str
+    imagem_url: Optional[str] = None
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -134,6 +171,7 @@ class AtividadeCreate(BaseModel):
     hora: str = Field(max_length=50)
     data: str = Field(max_length=120)
     imagem_url: str = Field(max_length=500)
+    vagas: Optional[int] = Field(default=None, ge=1)
 
 
 class AtividadeUpdate(BaseModel):
@@ -141,6 +179,7 @@ class AtividadeUpdate(BaseModel):
     hora: Optional[str] = Field(default=None, max_length=50)
     data: Optional[str] = Field(default=None, max_length=120)
     imagem_url: Optional[str] = Field(default=None, max_length=500)
+    vagas: Optional[int] = Field(default=None, ge=0)
 
 
 class InscritoOut(BaseModel):
@@ -173,3 +212,55 @@ class PresencaUpsert(BaseModel):
     user_id: int = Field(ge=1)
     data: date
     present: bool
+
+
+# --- Dashboard administrativo ---
+class DashboardIndicadoresOut(BaseModel):
+    total_idosos: int
+    total_funcionarios: int
+    total_atividades: int
+    total_inscricoes_confirmadas: int
+    total_noticias: int
+    total_itens_cardapio: int
+    total_presencas: int
+
+
+class PontoSemanaOut(BaseModel):
+    semana: str
+    total: int
+
+
+class InscricoesPorSemanaOut(BaseModel):
+    pontos: list[PontoSemanaOut]
+
+
+class UsoFuncionalidadeOut(BaseModel):
+    funcionalidade: str
+    total: int
+
+
+class UsoFuncionalidadesOut(BaseModel):
+    itens: list[UsoFuncionalidadeOut]
+
+
+class AlertaAtividadeOut(BaseModel):
+    activity_id: int
+    titulo: str
+    capacidade: int
+    inscritos: int
+    percentual: float
+
+
+class AlertasOut(BaseModel):
+    alertas: list[AlertaAtividadeOut]
+
+
+# --- Métricas de cache ---
+class CacheMetricsOut(BaseModel):
+    enabled: bool
+    hits: int
+    misses: int
+    hit_rate: float
+    avg_get_ms: float
+    sets: int
+    invalidations: int

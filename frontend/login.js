@@ -85,6 +85,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (data.access_token) {
                     localStorage.setItem("token", data.access_token);
                 }
+                if (data.refresh_token) {
+                    localStorage.setItem("refresh_token", data.refresh_token);
+                }
 
                 submitBtn.disabled = true;
                 feedbackMessage.classList.remove("error");
@@ -101,6 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         const me = await meRes.json();
                         if (userType === "funcionario" && !me.is_staff) {
                             localStorage.removeItem("token");
+                            localStorage.removeItem("refresh_token");
                             submitBtn.disabled = false;
                             feedbackMessage.classList.remove("success", "is-pending");
                             feedbackMessage.textContent =

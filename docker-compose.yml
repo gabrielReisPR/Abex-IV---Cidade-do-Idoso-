@@ -16,6 +16,16 @@ services:
       retries: 10
       start_period: 10s
 
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
   api:
     build:
       context: ./backend
@@ -28,8 +38,11 @@ services:
       DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/cidade_idoso
       DB_HOST: db
       POSTGRES_USER: postgres
+      REDIS_URL: redis://redis:6379/0
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
   web:
