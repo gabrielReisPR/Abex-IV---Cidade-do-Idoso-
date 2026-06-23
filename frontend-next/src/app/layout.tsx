@@ -1,4 +1,5 @@
 import './globals.css'
+import '@fortawesome/fontawesome-free/css/all.min.css'
 import type { ReactNode } from 'react'
 import { Inter } from 'next/font/google'
 import { cookies } from 'next/headers'
@@ -32,12 +33,6 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html lang="pt-BR" className={cls.trim()}>
       <head>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
-        />
       </head>
       <body className={inter.className}>
         {children}
