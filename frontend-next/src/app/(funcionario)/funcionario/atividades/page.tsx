@@ -6,7 +6,7 @@ export default async function FuncAtividadesPage() {
   const { atividades } = await apiJson<{ atividades: AtividadeOut[] }>('/atividades/catalogo')
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Gerenciar atividades</h1>
+      <h1 className="text-3xl font-bold text-[--color-ink]">Gerenciar atividades</h1>
       <AtividadeAdmin atividades={atividades} />
     </div>
   )
