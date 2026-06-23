@@ -41,6 +41,25 @@ async function refreshTokens(): Promise<boolean> {
   return true
 }
 
+export function parseApiPayload(text: string): unknown {
+  if (!text) return null
+  try {
+    return JSON.parse(text)
+  } catch {
+    return text // non-JSON body → keep the raw text
+  }
+}
+
+export function apiErrorMessage(payload: unknown, status: number): string {
+  if (payload && typeof payload === 'object') {
+    const o = payload as Record<string, unknown>
+    const m = o.detail ?? o.message
+    if (typeof m === 'string') return m
+  }
+  if (typeof payload === 'string' && payload) return payload
+  return `HTTP ${status}`
+}
+
 export async function apiFetch(path: string, init: RequestInit = {}): Promise<Response> {
   const jar = await cookies()
   const buildHeaders = () => {
@@ -53,6 +72,7 @@ export async function apiFetch(path: string, init: RequestInit = {}): Promise<Re
   let res = await fetch(url, { ...init, headers: buildHeaders(), cache: 'no-store' })
   if (shouldRetryAfter401(res.status, Boolean(jar.get(COOKIES.refresh)?.value))) {
     if (await refreshTokens()) {
+      await res.body?.cancel()
       res = await fetch(url, { ...init, headers: buildHeaders(), cache: 'no-store' })
     }
   }
@@ -62,11 +82,9 @@ export async function apiFetch(path: string, init: RequestInit = {}): Promise<Re
 export async function apiJson<T>(path: string, init: RequestInit = {}): Promise<T> {
   const res = await apiFetch(path, init)
   const text = await res.text()
-  const payload = text ? JSON.parse(text) : null
+  const payload = parseApiPayload(text)
   if (!res.ok) {
-    const msg =
-      (payload && (payload.detail || payload.message)) || `HTTP ${res.status}`
-    throw new ApiError(String(msg), res.status, payload)
+    throw new ApiError(apiErrorMessage(payload, res.status), res.status, payload)
   }
   return payload as T
 }
