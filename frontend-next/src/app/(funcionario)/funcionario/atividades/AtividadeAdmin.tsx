@@ -8,12 +8,12 @@ import type { AtividadeOut } from '@/lib/types'
 
 export function AtividadeAdmin({ atividades }: { atividades: AtividadeOut[] }) {
   const { register, handleSubmit, reset } = useForm<AtividadeInput>({ resolver: zodResolver(atividadeFormSchema) })
-  const [msg, setMsg] = useState(''); const [pending, start] = useTransition()
+  const [msg, setMsg] = useState(''); const [err, setErr] = useState(''); const [pending, start] = useTransition()
 
   async function onSubmit(values: AtividadeInput) {
-    setMsg('')
+    setMsg(''); setErr('')
     const r = await criarAtividade(values)
-    if (r.ok) { setMsg('Atividade criada.'); reset() } else setMsg(r.error ?? 'Erro')
+    if (r.ok) { setMsg('Atividade criada.'); setErr(''); reset() } else { setErr(r.error ?? 'Erro'); setMsg('') }
   }
 
   return (
@@ -26,6 +26,7 @@ export function AtividadeAdmin({ atividades }: { atividades: AtividadeOut[] }) {
         <Field id="vagas" label="Vagas (opcional)" reg={register('vagas')} />
         <div className="sm:col-span-2">
           {msg && <p role="status" className="mb-2 text-green-700">{msg}</p>}
+          {err && <p role="alert" className="mb-2 text-red-700">{err}</p>}
           <button type="submit" className="rounded-lg bg-brand px-6 py-3 font-bold text-white">Criar atividade</button>
         </div>
       </form>

@@ -7,5 +7,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   // apiFetch attaches the token; do NOT set Content-Type so fetch adds the multipart boundary.
   const res = await apiFetch(`/noticias/${id}/imagem`, { method: 'POST', body: form })
   const text = await res.text()
-  return new NextResponse(text, { status: res.status, headers: { 'Content-Type': 'application/json' } })
+  return new NextResponse(text, {
+    status: res.status,
+    headers: { 'Content-Type': res.headers.get('content-type') ?? 'application/json' },
+  })
 }

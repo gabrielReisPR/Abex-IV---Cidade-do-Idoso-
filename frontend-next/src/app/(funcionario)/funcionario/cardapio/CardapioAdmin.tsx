@@ -8,12 +8,12 @@ import type { CardapioItemOut } from '@/lib/types'
 
 export function CardapioAdmin({ itens }: { itens: CardapioItemOut[] }) {
   const { register, handleSubmit, reset } = useForm<CardapioInput>({ resolver: zodResolver(cardapioFormSchema) })
-  const [msg, setMsg] = useState(''); const [pending, start] = useTransition()
+  const [msg, setMsg] = useState(''); const [err, setErr] = useState(''); const [pending, start] = useTransition()
 
   async function onSubmit(values: CardapioInput) {
-    setMsg('')
+    setMsg(''); setErr('')
     const r = await criarItem(values)
-    if (r.ok) { setMsg('Item adicionado.'); reset() } else setMsg(r.error ?? 'Erro')
+    if (r.ok) { setMsg('Item adicionado.'); setErr(''); reset() } else { setErr(r.error ?? 'Erro'); setMsg('') }
   }
 
   return (
@@ -28,6 +28,7 @@ export function CardapioAdmin({ itens }: { itens: CardapioItemOut[] }) {
         <Field id="imagem_url" label="Imagem (URL)" reg={register('imagem_url')} />
         <div className="sm:col-span-2">
           {msg && <p role="status" className="mb-2 text-green-700">{msg}</p>}
+          {err && <p role="alert" className="mb-2 text-red-700">{err}</p>}
           <button type="submit" className="rounded-lg bg-brand px-6 py-3 font-bold text-white">Adicionar item</button>
         </div>
       </form>
