@@ -25,3 +25,16 @@ test('cadastro creates account and returns to login', async ({ page }) => {
   await page.getByRole('button', { name: /cadastrar/i }).click()
   await expect(page.getByRole('status')).toContainText(/sucesso|criada/i)
 })
+
+test('esqueci-senha shows a confirmation for unknown email path', async ({ page }) => {
+  await page.goto('/esqueci-senha')
+  await page.getByLabel(/e-mail/i).fill('whoever@example.com')
+  await page.getByRole('button', { name: /enviar link/i }).click()
+  await expect(page.locator('[role="status"], [role="alert"]')).toBeVisible()
+})
+
+test('redefinir-senha.html redirects to /redefinir-senha keeping token', async ({ page }) => {
+  await page.goto('/redefinir-senha.html?token=abc123')
+  await expect(page).toHaveURL(/\/redefinir-senha\?token=abc123/)
+  await expect(page.getByLabel(/nova senha/i)).toBeVisible()
+})
