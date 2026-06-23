@@ -1,30 +1,135 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #0369a1;
-  --color-brand-strong: #075985;
-  --font-size-base: 1.125rem; /* larger default for readability */
+  /* ── Brand palette ─────────────────────────────────────────── */
+  --color-brand:       #00B931;   /* vibrant green — primary CTA/accent */
+  --color-brand-dark:  #01200F;   /* very dark green — gradient start / text */
+  --color-brand-mid:   #2D5A3D;   /* medium green */
+  --color-ink:         #01200F;   /* body text */
+  --color-muted:       #5C6672;   /* secondary / caption text */
+  --color-border:      #CDCDCD;   /* card borders */
+  --color-brown:       #7A5C58;   /* meta / date accent */
+  --color-danger:      #C0392B;   /* cancel / delete / error */
+  --color-surface:     #FFFFFF;   /* cards */
+  --color-bg-soft:     #F4FCF6;   /* light-green page tint */
+
+  /* ── Base typography ─────────────────────────────────────────*/
+  --font-size-base:    1.125rem;  /* 18 px — elderly readability */
 }
 
-/* Accessibility: font scaling via root font-size (rem cascade). */
-html { font-size: 100%; }
-html.a11y-zoom-1 { font-size: 112.5%; }
-html.a11y-zoom-2 { font-size: 125%; }
-
-/* High contrast theme. */
-html.high-contrast {
-  filter: contrast(1.15);
+/* ── Signature gradient ─────────────────────────────────────── */
+:root {
+  --brand-gradient: linear-gradient(135deg, #01200F 0%, #00B931 100%);
 }
-html.high-contrast body {
-  background: #000;
-  color: #fff;
-}
-html.high-contrast a { color: #ffd400; }
 
-/* Visible keyboard focus everywhere. */
+/* ── Base body ───────────────────────────────────────────────── */
+body {
+  font-size: var(--font-size-base);
+  color: var(--color-ink);
+}
+
+/* ── Accessibility: font scaling via root (rem cascade) ────── */
+html               { font-size: 100%; }
+html.a11y-zoom-1   { font-size: 112.5%; }
+html.a11y-zoom-2   { font-size: 125%; }
+
+/* ── High-contrast theme ─────────────────────────────────────── */
+html.high-contrast              { filter: contrast(1.15); }
+html.high-contrast body         { background: #000; color: #fff; }
+html.high-contrast a            { color: #ffd400; }
+
+/* ── Keyboard focus ─────────────────────────────────────────── */
 :focus-visible {
   outline: 3px solid var(--color-brand);
   outline-offset: 2px;
 }
 
-body { font-size: var(--font-size-base); }
+/* ═══════════════════════════════════════════════════════════════
+   Shared utility classes
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Primary button — green gradient */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--brand-gradient);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.125rem;
+  padding: 0.75rem 1.5rem;     /* py-3 px-6 */
+  border-radius: 0.5rem;       /* rounded-lg */
+  border: none;
+  cursor: pointer;
+  min-height: 48px;            /* touch-friendly */
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 185, 49, 0.4);
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Danger button */
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--color-danger);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.125rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  min-height: 48px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-danger:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(192, 57, 43, 0.4);
+}
+.btn-danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Form field */
+.field-input {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border);
+  padding: 0.75rem;
+  font-size: 1.125rem;
+  color: var(--color-ink);
+  background: #ffffff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  min-height: 48px;
+}
+.field-input:focus {
+  outline: none;
+  border-color: var(--color-brand);
+  box-shadow: 0 0 0 3px rgba(0, 185, 49, 0.2);
+}
+
+/* Feedback banners */
+.feedback-success {
+  background: #e8f5ec;
+  color: #0d3d1f;
+  border: 1px solid #b8dfc8;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+.feedback-error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}

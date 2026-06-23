@@ -1,7 +1,14 @@
 import './globals.css'
 import type { ReactNode } from 'react'
+import { Inter } from 'next/font/google'
 import { cookies } from 'next/headers'
 import { AccessibilityWidget } from '@/components/AccessibilityWidget'
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+})
 
 export const metadata = { title: 'Portal Cidade do Idoso' }
 
@@ -24,7 +31,15 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 
   return (
     <html lang="pt-BR" className={cls.trim()}>
-      <body>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
+        />
+      </head>
+      <body className={inter.className}>
         {children}
         <AccessibilityWidget initialZoom={zoom} initialContrast={contrast} />
       </body>

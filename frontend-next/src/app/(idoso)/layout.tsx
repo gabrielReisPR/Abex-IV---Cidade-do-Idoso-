@@ -1,22 +1,22 @@
 import type { ReactNode } from 'react'
 import { Header } from '@/components/Header'
+import { BottomNav } from '@/components/BottomNav'
 import { apiJson } from '@/lib/api'
 import type { UserPublic } from '@/lib/types'
 
-const ITEMS = [
-  { href: '/home', label: 'Início' },
-  { href: '/atividades', label: 'Atividades' },
-  { href: '/cardapio', label: 'Cardápio' },
-  { href: '/noticias', label: 'Notícias' },
-  { href: '/perfil', label: 'Perfil' },
-]
-
 export default async function IdosoLayout({ children }: { children: ReactNode }) {
   const me = await apiJson<UserPublic>('/users/me')
+  const name = me.first_name || me.username
   return (
     <>
-      <Header userName={me.first_name || me.username} items={ITEMS} />
-      <main className="mx-auto max-w-5xl p-4">{children}</main>
+      <Header userName={name} variant="idoso" />
+      <main
+        className="mx-auto max-w-6xl px-4 py-8 pb-28 min-h-screen"
+        style={{ background: 'var(--color-bg-soft)' }}
+      >
+        {children}
+      </main>
+      <BottomNav variant="idoso" />
     </>
   )
 }
