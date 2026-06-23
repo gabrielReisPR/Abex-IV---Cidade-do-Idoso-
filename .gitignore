@@ -17,3 +17,15 @@ node_modules/
 frontend/node_modules/
 frontend/playwright-report/
 frontend/test-results/
+frontend-next/node_modules/
+frontend-next/playwright-report/
+frontend-next/test-results/
+frontend-next/tsconfig.tsbuildinfo
+
+# Local demo credentials (keep local, never commit)
+ACESSO-DEMO.md
+
+# SDD scratch workspaces (keep local)
+superpowers/
+.superpowers/
+**/.superpowers/

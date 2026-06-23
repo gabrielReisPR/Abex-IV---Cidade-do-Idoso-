@@ -11,7 +11,7 @@ cp .env.example .env        # ajuste SMTP/SECRET_KEY se for usar e-mail real
 docker compose up -d --build
 ```
 
-- Frontend (nginx): http://localhost:8080
+- Frontend (Next.js): http://localhost:3000
 - API (FastAPI): http://localhost:8000 — **documentação Swagger em /docs**
 - Postgres e Redis ficam apenas na rede interna do Compose.
 
@@ -59,13 +59,14 @@ campo legado `is_staff` é mantido em sincronia para compatibilidade.
 ### Sprint 5 — Acessibilidade, Usabilidade e Consolidação
 | Funcionalidade | Onde |
 |---|---|
-| Acessibilidade WCAG AA (fonte, contraste, ARIA, foco) | `frontend/accessibility.js` + `accessibility.css` (widget global) + ARIA nas telas |
-| Dashboard evoluído (gráfico de linha, barras, **alertas >90%**, **CSV**) | `routers/dashboard.py`, `frontend/dashboard.js` (Chart.js) |
+| **Frontend reescrito em Next.js** (App Router, TypeScript, Tailwind) | `frontend-next/` — servidor Node standalone na porta 3000; nginx removido |
+| Acessibilidade WCAG AA (fonte, contraste, ARIA, foco) | Widget global em `frontend-next/src/components/AccessibilityWidget.tsx` + ARIA nas telas |
+| Dashboard evoluído (gráfico de linha, barras, **alertas >90%**, **CSV**) | `routers/dashboard.py` (backend), `frontend-next/src/app/(staff)/dashboard/` (frontend) |
 | Exportação CSV de inscrições/presença | `GET /dashboard/export/inscricoes.csv` (sanitizado contra CSV injection) |
-| **Refresh token automático** | `security.py` (`/auth/refresh`, rotação) + `frontend/api-base.js` (wrapper de fetch) |
+| **Refresh token automático** | `security.py` (`/auth/refresh`, rotação) + `frontend-next/src/lib/api.ts` (wrapper de fetch) |
 | Segurança: proteção por role + **auditoria** | `security.py` (`get_current_admin_user`), `audit.py` (`audit_logs`) |
 | Cache **write-through** + métricas | invalidação por evento em cardápio/notícias + `GET /metrics/cache` |
-| Testes Playwright (e2e) | `frontend/e2e/` (8 casos de acessibilidade + fluxos) |
+| Testes Playwright (e2e) | `frontend-next/e2e/` (22 casos — fluxos de idoso, funcionário, admin e acessibilidade) |
 | CI/CD (gate de qualidade) | `.github/workflows/ci.yml` (ruff + pytest + Docker + Playwright) |
 
 > **Itens de backlog** dos relatórios (não marcados como concluídos) **não**
@@ -79,8 +80,8 @@ campo legado `is_staff` é mantido em sincronia para compatibilidade.
 cd backend && poetry install && poetry run ruff check && poetry run pytest
 
 # E2E (com a stack Docker no ar)
-cd frontend && npm install && npx playwright install chromium
-E2E_BASE_URL=http://localhost:8080 npx playwright test
+cd frontend-next && npm install && npx playwright install chromium
+E2E_BASE_URL=http://localhost:3000 npx playwright test
 ```
 
 ## Variáveis de ambiente relevantes (.env)
